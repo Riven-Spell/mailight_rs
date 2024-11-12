@@ -182,6 +182,7 @@ dependencies = [
  "num_enum",
  "serialport",
  "structopt",
+ "sysfs-pwm",
  "tracing",
  "tracing-subscriber",
 ]
@@ -429,6 +430,12 @@ dependencies = [
  "quote",
  "unicode-ident",
 ]
+
+[[package]]
+name = "sysfs-pwm"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "267589d5f86a21e4da23c23be6083a6bcc42b3ea90ab952cda36917231e22849"
 
 [[package]]
 name = "textwrap"

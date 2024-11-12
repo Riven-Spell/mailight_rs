@@ -4,6 +4,7 @@ mod sega_led;
 
 #[cfg(test)]
 mod test;
+mod led_pwm;
 
 use crate::jvs_parser::JVSPacket;
 use anyhow::Result;
@@ -24,6 +25,14 @@ enum Opts {
         fix_rbg: bool,
         #[structopt(short, long, help = "Log packets as they are sent")]
         log_traffic: bool,
+
+        // pwm shenanigans
+        #[structopt(short, long, help="Format: `<pwmchip#>-<pwm#>`, e.g. 0-3, 1-4. Accepts multiple arguments. Overlaps between FET pins average.")]
+        ring: Option<Vec<String>>,
+        #[structopt(short, long, help="Format: `<pwmchip#>-<pwm#>`, e.g. 0-3, 1-4. Accepts multiple arguments. Overlaps between FET pins average.")]
+        side: Option<Vec<String>>,
+        #[structopt(short, long, help="Format: `<pwmchip#>-<pwm#>`, e.g. 0-3, 1-4. Accepts multiple arguments. Overlaps between FET pins average.")]
+        chassis: Option<Vec<String>>,
     },
 }
 
@@ -71,7 +80,12 @@ fn main() {
             led_port,
             fix_rbg,
             log_traffic,
-        } => crate::proxy::proxy(alls_port, led_port, fix_rbg, log_traffic),
+            pwm_chip,
+            ring,
+            side,
+            chassis,
+        } => crate::proxy::proxy(alls_port, led_port, fix_rbg, log_traffic,
+                                 led_pwm::create_config(ring, side, chassis, pwm_chip)),
     };
     if let Err(err) = result {
         tracing::error!("Error: {:?}", err);
